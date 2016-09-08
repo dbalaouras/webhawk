@@ -65,7 +65,7 @@ def bootstrap_app(flask_web_app, cli_options=None):
     context.register("builder", Builder(context=context))
 
     # Start Worker Greenlets
-    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+    if os.environ.get("WERKZEUG_RUN_MAIN") != "true":
         task_manager = BuildTaskManager(context=context)
         task_manager.start_workers()
         context.register("task_manager", task_manager)

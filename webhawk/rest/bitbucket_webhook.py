@@ -22,7 +22,7 @@ class BitBucketWebHook(WebHookBase):
         # Process the input
         repository_name = input['repository']['name']
         branch_name = input['push']['changes'][0]['new']['name']
-        vcs = input['repository']['vcs']
+        vcs = input['repository']['scm']
 
         # Construct the new task
         new_task = task_manager.create_new_task(repository_name=repository_name, branch_name=branch_name, vcs=vcs)
