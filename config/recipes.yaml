@@ -1,22 +1,14 @@
 #
-# WebHawk Recipies Configuration File
+# BitHawk Recipies YUML Configuration File
 #
-diseng-develop:
-  repository:
-    name: discovery-engine
-    branch: develop
-    url: "git@bitbucket.org:frontierfm/discovery-engine.git"
-    vcs: git
-  command: "python ./bin/fabfile.py -f -s -a build -t bowie -e dev"
-  dependencies:
-    - repository: shared
-      branch: develop
+# Contains Recipes (build descriptions) for projects hosted on remote VCS services (github, bitbucket)
+#
 
-shared-develop:
+# THIS IS AN EXAMPLE RECIPE
+myapp-dev:
   repository:
-    name: shared
-    branch: develop
-    url: "git@bitbucket.org:frontierfm/shared.git"
+    name: myapp
+    branch: dev
+    url: "git@bitbucket.org:stek.io/website.git"
     vcs: git
-  command: null
-  dependencies: null
+  command: "python ./bin/fabfile.py -f -s -a build"

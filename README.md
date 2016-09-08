@@ -113,16 +113,17 @@ Before you start WebHawk, you need to bootstrap the environment. The following c
 $ ./bin/bootstrap.sh
 ```
 
-Note that you need the create python environment active when running WebHawk. Do activate it on your console, do:
+To activate this environment on your console, run:
 ```
 $ source webhawk-venv/bin/activate
 ```
-And you will see your promt cchanging into something like this:
+
+When the virtual env is active, you will see your prompt changing into something like this:
 ```
 (webhawk-venv)dimi@Neutron~/workspaces/webhawk$ 
 ```
 
-And you can always exit the virtual environment by typing the command ```deactivate``` on your console.
+Tip: You can always exit the virtual environment by typing the command ```deactivate``` on your console.
 
 
 Now you can start WebHawk with two ways:
