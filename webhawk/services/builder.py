@@ -41,13 +41,13 @@ class Builder(object):
             self._change_dir = cd
             self._run_command = run
 
-    def run(self, build_id, repository_name, branch_name):
+    def run(self, build_id, repository_name, branch_name, dependency_build=False):
         """
 
         :param build_id: A unique build Id
         :param repository_name: The name of the repository to build
         :param branch_name: The name of the branch to build
-        :return:
+        :param dependency_build: Is this a dependency build or not?
         """
 
         # Check if we have a recipe for the given repository
@@ -70,7 +70,7 @@ class Builder(object):
             self._build(recipe=recipe, build_path=build_path)
 
             # Cleanup build directory if instructed
-            if self._context["config"]["cleanup_builds"]:
+            if not dependency_build and self._context["config"]["cleanup_builds"]:
                 self._cleanup(build_base_path=build_base_path)
 
     def _get_build_base_path(self, build_id):
