@@ -1,0 +1,34 @@
+# IDE/Development
+.idea
+dev/
+
+# Logs
+*.log
+logs
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+webhawk-builds/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# Flask
+instance/
+.webassets-cache
+
+# virtualenv
+.venv/
+venv/
+ENV/
+webhawk-venv/

@@ -22,7 +22,7 @@ WebHawk **does not** come with:
 
 WebHawk also comes with a few _secondary features_:
 
-1. It's easy to extend; with a bit of coding you can add support to other VCS and hosted CMS repositories.
+1. It's easy to extend; with a bit of coding you can add support to other VCS systems and/or WebBased VCS hosting services.
 2. It can run the builds on a different server than the one it runs on.
 
 
@@ -67,7 +67,7 @@ Here's an example:
 
 ```
 #
-# BitHawk Recipies Configuration File
+# WebHawk Recipies Configuration File
 #
 myapp-dev:
   repository:
