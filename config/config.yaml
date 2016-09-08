@@ -1,0 +1,57 @@
+#
+# CIHawk Configuration File
+#
+
+# REST API
+base_path: ""
+
+# BUILDING
+recipes_file_path: "config/recipes.yaml"
+workspace_path: "/Users/dimi/Workspaces/bithawk-build"
+builder_hostname: localhost
+task_queue_size: 10
+cleanup_builds: true
+
+# LOGGING
+logging:
+    version: 1
+
+    # Configure the log formatters
+    formatters:
+        brief:
+           format: "%(asctime)s - %(name)-15s - %(process)-5d - %(levelname)-6s - %(message)s"
+        precise:
+           format: "%(asctime)s - %(name)-15s - %(process)-5d - %(levelname)-6s - %(message)s"
+
+    # Configure the logging handlers
+    handlers:
+        console:
+            class: logging.StreamHandler
+            stream: ext://sys.stdout
+            formatter: brief
+        file-werkzeug:
+            class : logging.handlers.RotatingFileHandler
+            filename: flask.log
+            maxBytes: 1048576
+            backupCount: 3
+        file-webhawk:
+            class : logging.handlers.RotatingFileHandler
+            formatter: precise
+            filename: webhawk.log
+            maxBytes: 1048576
+            backupCount: 3
+
+    # Root logger
+    root:
+        handlers: [console]
+        level: INFO
+        propagate: 0
+
+    # Configure individual loggers
+    loggers:
+        webhawk:
+            handlers: [file-webhawk]
+            level: INFO
+        werkzeug:
+            handlers: [file-werkzeug]
+            level: INFO

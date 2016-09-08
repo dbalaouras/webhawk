@@ -1,0 +1,22 @@
+#
+# BitHawk Recipies Configuration File
+#
+myapp-develop:
+  repository:
+    name: myapp
+    branch: develop
+    url: "git@bitbucket.org:frontierfm/discovery-engine.git"
+    scm: git
+  command: "python ./bin/fabfile.py -f -s -a build"
+  dependencies:
+    - repository: shared
+      branch: master
+
+shared-master:
+  repository:
+    name: shared
+    branch: master
+    url: "git@bitbucket.org:frontierfm/shared.git"
+    scm: git
+  command: null
+  dependencies: null

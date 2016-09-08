@@ -1,0 +1,22 @@
+#
+# BitHawk Recipies Configuration File
+#
+diseng-develop:
+  repository:
+    name: discovery-engine
+    branch: develop
+    url: "git@bitbucket.org:frontierfm/discovery-engine.git"
+    vcs: git
+  command: "python ./bin/fabfile.py -f -s -a build -t bowie -e dev"
+  dependencies:
+    - repository: shared
+      branch: develop
+
+shared-develop:
+  repository:
+    name: shared
+    branch: develop
+    url: "git@bitbucket.org:frontierfm/shared.git"
+    vcs: git
+  command: null
+  dependencies: null
