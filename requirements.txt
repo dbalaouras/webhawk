@@ -1,6 +1,5 @@
 Fabric==1.10.0
 PyYAML==3.11
-pycrypto==2.6.1
 Flask==0.11.1
 flask-restful==0.3.5
 gevent==1.1.2

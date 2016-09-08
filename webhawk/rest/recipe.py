@@ -18,8 +18,7 @@ class Recipe(BaseResource):
         "repository": fields.Nested({
             "name": fields.String,
             "branch": fields.String,
-            "url": fields.String,
-            "ssh_key": fields.String
+            "url": fields.String
         }),
         "command": fields.String,
         "dependencies": fields.List(
