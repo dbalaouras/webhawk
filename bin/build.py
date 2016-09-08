@@ -93,6 +93,9 @@ def parse_options():
     parser.add_option("-b", "--branch", action="store", dest="branch",
                       default=None, help="Branch to build")
 
+    parser.add_option("-c", "--cleanup_builds", action="store_true", dest="cleanup_builds",
+                      default=False, help="Cleanup build directory after build")
+
     # Parse the options
     (options, args) = parser.parse_args()
 
