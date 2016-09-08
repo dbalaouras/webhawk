@@ -102,7 +102,7 @@ class Builder(object):
         """
         cms_manager = self._context.get("%s_manager" % recipe["repository"]["vcs"], None)
         cms_manager.clone(url=recipe["repository"]["url"], branch=recipe["repository"]["branch"],
-                          target_path=build_path)
+                          target_path=build_path, run_cmd=self._run_command)
 
     def _build(self, recipe, build_path):
         """
