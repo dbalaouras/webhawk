@@ -7,6 +7,8 @@ from flask_restful import Api
 from repositories.recipe_repository import FileRecipeRepository
 from rest.api_errors import ApiErrorRegistry
 from rest.bitbucket_webhook import BitBucketWebHook
+from rest.github_webhook import GithubWebHook
+from rest.gitlab_webhook import GitlabWebHook
 from rest.recipe import Recipe
 from rest.root import Root
 from services.app_context import AppContext
@@ -27,7 +29,7 @@ api_blueprint = Blueprint('api', __name__, url_prefix='/api')
 
 def bootstrap(flask_app, config):
     """
-    Bootstrap the Bluprint
+    Bootstra
 
     :param flask_app: The Flask object
     :param config: Application Config
@@ -35,13 +37,11 @@ def bootstrap(flask_app, config):
     global api_blueprint
     # Create the Flask App
 
-    api_blueprint = Blueprint('api', __name__, url_prefix=config['base_path'])
-
     # Get logger
     logger = logging.getLogger("webhawk")
 
     # Create the context
-    # TODO: put the following names in a single class as static strings
+    # TODO: put the following key names in a single class as static strings
     context = AppContext(allow_replace=False)
     context.register("config", config)
     context.register("logger", logger)
@@ -66,5 +66,7 @@ def bootstrap(flask_app, config):
     Recipe.add_resource_to_api(rest_api, context=context)
     Root.add_resource_to_api(rest_api, context=context)
     BitBucketWebHook.add_resource_to_api(rest_api, context=context)
+    GithubWebHook.add_resource_to_api(rest_api, context=context)
+    GitlabWebHook.add_resource_to_api(rest_api, context=context)
 
     logger.info("WebHawk RESTful API Initiated")

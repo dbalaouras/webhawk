@@ -6,11 +6,11 @@ __copyright__ = "Copyright 2016, Stek.io"
 __license__ = "Apache License 2.0, see LICENSE for more details."
 
 
-class BitBucketWebHook(WebHookBase):
+class GithubWebHook(WebHookBase):
     """
-    RESTful Resource for the Bitbucket Webhook
+    RESTful Resource for the Github Webhook
     """
-    resource_name = "bitbucket"
+    resource_name = "github"
 
     def create_task(self, input):
         """
@@ -20,11 +20,10 @@ class BitBucketWebHook(WebHookBase):
         # Get the task manager
         task_manager = self._context.get("task_manager")
 
-        # Process the input
         try:
             repository_name = input['repository']['name']
-            branch_name = input['push']['changes'][0]['new']['name']
-            vcs = input['repository']['scm']
+            branch_name = input['ref'].split('/')[2]
+            vcs = "git"
         except KeyError:
             raise InvalidUsage("Invalid payload: %s" % str(input))
 

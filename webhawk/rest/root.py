@@ -16,7 +16,7 @@ class Root(BaseResource):
     resource_name = "root"
     resource_fields = {}
 
-    def get(get, resource_id=None):
+    def get(self, resource_id=None):
         """
         Responds to HTTP GET method
         :return: A dictionary with Resource data
@@ -28,6 +28,12 @@ class Root(BaseResource):
                 },
                 "bitbucketwebhook": {
                     "href": flask.url_for('api.bitbucket', _external=True)
+                },
+                "githubwebhook": {
+                    "href": flask.url_for('api.github', _external=True)
+                },
+                "gitlabwebhook": {
+                    "href": flask.url_for('api.gitlab', _external=True)
                 }
             }
         }
