@@ -10,6 +10,7 @@ __author__ = "Dimi Balaouras"
 __copyright__ = "Copyright 2016, Dimi Balaouras - Stek.io"
 __license__ = "Apache License 2.0, see LICENSE for more details."
 
+
 class BaseResource(Resource):
     """
     Abstract Base of WebHawk's RESTful Resources.
@@ -21,7 +22,7 @@ class BaseResource(Resource):
 
     # Define basic pattern for the Resource URl. The parameter {0} is replaced by the API's base path,
     # and {1} with the resource name. Can be overriden by Resource subclasses
-    resource_paths = ['{0}/{1}', '{0}/{1}/', '{0}/{1}/<string:resource_id>']
+    resource_paths = ['/{0}', '/{0}/', '/{0}/<string:resource_id>']
 
     # Resource properties that must be overridden by subclasses
     resource_name = None
@@ -35,11 +36,6 @@ class BaseResource(Resource):
         # Store input
         self._context = context
         self._logger = context["logger"]
-        self._base_path = context["config"]["base_path"] if context["config"]["base_path"] else "/"
-
-        # Ensure we have a path starting with a slash
-        if self._base_path[:1] != "/":
-            self._base_path = "/%s" % self._base_path
 
         # Generate Resource URL
         self._resource_base_url = flask.url_for("api.%s" % self.resource_name, _external=True)
@@ -57,10 +53,8 @@ class BaseResource(Resource):
         :param api: The Flask-RESTful API object
         :param context: WebHawk Services Context
         """
-        formatted_paths = [path.format(context["config"]["base_path"], cls.resource_name).replace("//", "/") for path in
-                           cls.resource_paths]
-        api.add_resource(cls, *formatted_paths, endpoint="api.%s" % cls.resource_name,
-                         resource_class_kwargs={"context": context})
+        formatted_paths = [path.format(cls.resource_name).replace("//", "/") for path in cls.resource_paths]
+        api.add_resource(cls, *formatted_paths, endpoint=cls.resource_name, resource_class_kwargs={"context": context})
 
     def get(self, resource_id=None):
         """

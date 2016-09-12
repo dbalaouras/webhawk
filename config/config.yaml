@@ -3,7 +3,7 @@
 #
 
 # REST API
-base_path: ""
+base_path: "/api"
 
 # BUILDING
 recipes_file_path: "config/recipes.yaml"

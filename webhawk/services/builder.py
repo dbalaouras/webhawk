@@ -113,7 +113,6 @@ class Builder(object):
 
         if recipe.get("command", None):
             with self._change_dir(build_path):
-                self._run_command("echo $PATH")
                 self._run_command("%s" % (recipe["command"]))
 
         self._logger.info("Finished building")

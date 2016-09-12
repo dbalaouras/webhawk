@@ -12,7 +12,7 @@ class Root(BaseResource):
     The Artist RESTful Resource
     """
 
-    resource_paths = ['{0}', '{0}/']
+    resource_paths = ['', '/']
     resource_name = "root"
     resource_fields = {}
 

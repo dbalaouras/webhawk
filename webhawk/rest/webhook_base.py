@@ -17,8 +17,8 @@ class WebHookBase(BaseResource):
     """
     resource_name = None
 
-    resource_paths = ['{0}/webhooks/{1}', '{0}/webhooks/{1}/', '{0}/webhooks/{1}/<string:resource_id>',
-                      '{0}/webhooks/{1}/<string:resource_id>/']
+    resource_paths = ['/webhooks/{0}', '/webhooks/{0}/', '/webhooks/{0}/<string:resource_id>',
+                      '/webhooks/{0}/<string:resource_id>/']
 
     resource_fields = {
         "id": fields.String,
