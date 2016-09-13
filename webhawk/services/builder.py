@@ -23,7 +23,7 @@ class Builder(object):
         """
 
         # Fabric configuration
-        env.warn_only = True
+        env.warn_only = False
         env.use_ssh_config = True
 
         # Initialize properties
@@ -34,12 +34,7 @@ class Builder(object):
         self._logger.info("Initializing Builder")
 
         # Use local fabric commands when the builder is localhost
-        if self._builder_hostname == "localhost":
-            self._change_dir = lcd
-            self._run_command = local
-        else:
-            self._change_dir = cd
-            self._run_command = run
+        self._change_dir = lcd if self._builder_hostname == "localhost" else cd
 
     def run(self, build_id, repository_name, branch_name, dependency_build=False):
         """
@@ -58,16 +53,23 @@ class Builder(object):
         app_dependencies = recipe.get("dependencies", None)
         if app_dependencies:
             for dependency in app_dependencies:
-                self.run(repository_name=dependency['repository'], branch_name=dependency['branch'], build_id=build_id)
+                self.run(repository_name=dependency['repository'], branch_name=dependency['branch'], build_id=build_id,
+                         dependency_build=True)
 
         # Create build path
         build_base_path = self._get_build_base_path(build_id=build_id)
         build_path = "%s/%s" % (build_base_path, recipe["repository"]["name"])
 
-        with settings(host_string=self._builder_hostname), self._change_dir(self._workspace_path):
-            self._prepare(build_path=build_path)
-            self._checkout(recipe=recipe, build_path=build_path)
-            self._build(recipe=recipe, build_path=build_path)
+        with settings(host_string=self._builder_hostname, abort_exception=FabricException), self._change_dir(
+                self._workspace_path):
+            try:
+                self._prepare(build_path=build_path)
+                self._checkout(recipe=recipe, build_path=build_path)
+                self._build(recipe=recipe, build_path=build_path)
+
+            except FabricException as e:
+                self._logger.error("Error occurred while building %s/%s (build id : %s): %s" % (
+                    repository_name, branch_name, build_id, e))
 
             # Cleanup build directory if instructed
             if not dependency_build and self._context["config"]["cleanup_builds"]:
@@ -80,7 +82,7 @@ class Builder(object):
         """
         if self._workspace_path[0] != "/":
             # We have a relative path; lets make it absolute for clarity
-            current_path = os.getcwd() if self._builder_hostname == "localhost" else self._run_command('pwd')
+            current_path = os.getcwd() if self._builder_hostname == "localhost" else self._run_fabric('pwd')
             base_build_path = "%s/%s/%s" % (current_path, self._workspace_path, build_id)
         else:
             base_build_path = "%s/%s" % (self._workspace_path, build_id)
@@ -94,7 +96,7 @@ class Builder(object):
         self._logger.info("Preparing Environment %s" % build_path)
 
         # Make sure the workspace directory exists; otherwise create it
-        self._run_command('[[ -d "{0}" ]] || mkdir -p {0}'.format(build_path))
+        self._run_fabric('[[ -d "{0}" ]] || mkdir -p {0}'.format(build_path))
 
     def _checkout(self, recipe, build_path):
         """
@@ -102,7 +104,7 @@ class Builder(object):
         """
         cms_manager = self._context.get("%s_manager" % recipe["repository"]["vcs"], None)
         cms_manager.clone(url=recipe["repository"]["url"], branch=recipe["repository"]["branch"],
-                          target_path=build_path, run_cmd=self._run_command)
+                          target_path=build_path, run_cmd=self._run_fabric)
 
     def _build(self, recipe, build_path):
         """
@@ -113,7 +115,7 @@ class Builder(object):
 
         if recipe.get("command", None):
             with self._change_dir(build_path):
-                self._run_command("%s" % (recipe["command"]))
+                self._run_fabric("%s" % (recipe["command"]))
 
         self._logger.info("Finished building")
 
@@ -121,8 +123,32 @@ class Builder(object):
         """
         Cleanup after the build
         """
-        self._logger.info("Removing build diretory '%s'" % build_base_path)
-        self._run_command('rm -rf %s' % build_base_path)
+        self._logger.info("Removing build directory '%s'" % build_base_path)
+        self._run_fabric('rm -rf %s' % build_base_path)
+
+    def _run_fabric(self, cmd, log_output=True):
+        """
+        A Simple wrapper that runs fabric commands and returns the result. This is needed because the builder uses
+        either the local or the run command depending on when we're building (localhost vs remote host) and those two
+        commands have different stdout capture methods.
+
+        :param cmd: The command to run
+        :return: The command stdout
+        """
+        result = local(cmd, capture=True) if self._builder_hostname == "localhost" else run(cmd)
+
+        if log_output:
+            stdout = str(result.stdout)
+            stderr = str(result.stderr)
+
+            # Log output
+            if stdout:
+                self._logger.info("Build stdout: %s" % stdout)
+
+            if stderr:
+                self._logger.info("Build stderr: %s" % stderr)
+
+        return result
 
     @classmethod
     def generate_build_id(cls):
@@ -131,3 +157,12 @@ class Builder(object):
         :return: The generated build id
         """
         return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(12))
+
+
+class FabricException(Exception):
+    """
+    An Exception to use as an "abort_exception" of Fabric. Allows better error handling and build failure reporting.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(FabricException, self).__init__(*args, **kwargs)
