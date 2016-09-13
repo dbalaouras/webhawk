@@ -1,5 +1,4 @@
 import logging.config
-import os
 
 from flask import Blueprint
 from flask_restful import Api
@@ -11,6 +10,7 @@ from rest.github_webhook import GithubWebHook
 from rest.gitlab_webhook import GitlabWebHook
 from rest.recipe import Recipe
 from rest.root import Root
+from rest.webhawk_webhook import WebHawkWebHook
 from services.app_context import AppContext
 from services.build_task_manager import BuildTaskManager
 from services.builder import Builder
@@ -51,10 +51,9 @@ def bootstrap(flask_app, config):
     context.register("builder", Builder(context=context))
 
     # Start Worker Greenlets
-    if os.environ.get("WERKZEUG_RUN_MAIN") != "true":
-        task_manager = BuildTaskManager(context=context)
-        task_manager.start_workers()
-        context.register("task_manager", task_manager)
+    task_manager = BuildTaskManager(context=context)
+    task_manager.start_workers()
+    context.register("task_manager", task_manager)
 
     # Register error handlers
     ApiErrorRegistry.register_error_handlers(api_blueprint)
@@ -68,5 +67,6 @@ def bootstrap(flask_app, config):
     BitBucketWebHook.add_resource_to_api(rest_api, context=context)
     GithubWebHook.add_resource_to_api(rest_api, context=context)
     GitlabWebHook.add_resource_to_api(rest_api, context=context)
+    WebHawkWebHook.add_resource_to_api(rest_api, context=context)
 
     logger.info("WebHawk RESTful API Initiated")

@@ -26,14 +26,17 @@ class Root(BaseResource):
                 "recipe": {
                     "href": flask.url_for('api.recipe', _external=True)
                 },
-                "bitbucketwebhook": {
+                "bitbucket-webhook": {
                     "href": flask.url_for('api.bitbucket', _external=True)
                 },
-                "githubwebhook": {
+                "github-webhook": {
                     "href": flask.url_for('api.github', _external=True)
                 },
-                "gitlabwebhook": {
+                "gitlab-webhook": {
                     "href": flask.url_for('api.gitlab', _external=True)
+                },
+                "webhawk-webhook": {
+                    "href": flask.url_for('api.webhawk', _external=True)
                 }
             }
         }
