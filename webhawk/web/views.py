@@ -6,13 +6,13 @@ from flask import send_from_directory
 from . import website_blueprint as webapp
 
 
-@webapp.route("/")
-def index():
+@webapp.route("")
+def dashboard():
     """
     Render HomePage
     :return: Flask Response
     """
-    return render_template('index.html')
+    return render_template('dashboard.html')
 
 
 @webapp.route('favicon.ico')

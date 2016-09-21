@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block head %}
+{{ super() }}
+<script src="https://unpkg.com/react@15.3.0/dist/react.js"></script>
+<script src="https://unpkg.com/react-dom@15.3.0/dist/react-dom.js"></script>
+<script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
+<script src="https://unpkg.com/jquery@3.1.0/dist/jquery.min.js"></script>
+<script type="text/babel" src="{{ url_for('website.static', filename='js/recipebox.jsx') }}"></script>
+{% endblock head %}
+
+{% block content %}
+<div id="page-wrapper">
+
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Dashboard
+                    <small>Overview</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active">
+                        <i class="fa fa-dashboard"></i> Dashboard
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-tasks fa-fw"></i> Deployment Recipes</h3>
+                    </div>
+                    <div id="recipes-table-container" class="panel-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container-fluid -->
+
+</div>
+<!-- /#page-wrapper -->
+{% endblock content %}

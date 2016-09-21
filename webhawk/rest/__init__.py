@@ -24,7 +24,7 @@ __version__ = "0.0.1"
 __description__ = "WebHawk Flask Web Initiator"
 
 # Create the Flask App
-api_blueprint = Blueprint('api', __name__, url_prefix='/api')
+api_blueprint = Blueprint('api', __name__)
 
 
 def bootstrap(flask_app, config):

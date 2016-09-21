@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block head %}
+{{ super() }}
+<!--<script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>-->
+<!--<script src="{{ url_for('website.static', filename='vendor/react.min.js') }}"></script>-->
+<!--<script src="{{ url_for('website.static', filename='vendor/react-dom.min.js') }}"></script>-->
+
+<script src="https://unpkg.com/react@15.3.0/dist/react.js"></script>
+<script src="https://unpkg.com/react-dom@15.3.0/dist/react-dom.js"></script>
+<script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
+<script src="https://unpkg.com/jquery@3.1.0/dist/jquery.min.js"></script>
+<script type="text/babel" src="{{ url_for('website.static', filename='js/recipes.jsx') }}"></script>
+{% endblock head %}
+{% block content %}
+<h1 class="main-heading">Recipes</h1>
+
+<div id="recipes"></div>
+
+{% endblock content %}

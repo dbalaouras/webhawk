@@ -43,8 +43,8 @@ def bootstrap(flask_webapp, cli_options=None):
     web.bootstrap(flask_app=app, config=config)
 
     # Register blueprints
-    flask_webapp.register_blueprint(rest.api_blueprint)
-    flask_webapp.register_blueprint(web.website_blueprint)
+    flask_webapp.register_blueprint(rest.api_blueprint, url_prefix='/api')
+    flask_webapp.register_blueprint(web.website_blueprint, url_prefix='/')
 
     return flask_webapp
 

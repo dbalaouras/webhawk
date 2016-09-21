@@ -11,7 +11,7 @@ __description__ = "WebHawk Flask Web Initiator"
 __abs_dirpath__ = os.path.dirname(os.path.abspath(__file__))
 
 # Create the Flask App
-website_blueprint = Blueprint('website', __name__, url_prefix='/', template_folder='templates',
+website_blueprint = Blueprint('website', __name__, template_folder='templates',
                               static_folder='static', static_url_path='web/static')
 
 # Start the views
