@@ -96,7 +96,7 @@ class Builder(object):
         self._logger.info("Preparing Environment %s" % build_path)
 
         # Make sure the workspace directory exists; otherwise create it
-        self._run_fabric('[[ -d "{0}" ]] || mkdir -p {0}'.format(build_path))
+        self._run_fabric('mkdir -p {0}'.format(build_path))
 
     def _checkout(self, recipe, build_path):
         """
