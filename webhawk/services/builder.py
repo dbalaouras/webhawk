@@ -93,6 +93,7 @@ class Builder(object):
         """
         Prepare the build directory
         """
+        self._logger.info("=" * 79)
         self._logger.info("Preparing Environment %s" % build_path)
 
         # Make sure the workspace directory exists; otherwise create it
