@@ -12,9 +12,12 @@ class BitBucketWebHook(WebHookBase):
     """
     resource_name = "bitbucket"
 
-    def create_task(self, input):
+    def create_task(self, payload):
         """
         Creates a new build task using the input (usually a POST Payload)
+        :param payload: The task payload
+        :return: The newly created task
+
         """
 
         # Get the task manager
@@ -22,11 +25,11 @@ class BitBucketWebHook(WebHookBase):
 
         # Process the input
         try:
-            repository_name = input['repository']['name']
-            branch_name = input['push']['changes'][0]['new']['name']
-            vcs = input['repository']['scm']
+            repository_name = payload['repository']['name']
+            branch_name = payload['push']['changes'][0]['new']['name']
+            vcs = payload['repository']['scm']
         except KeyError:
-            raise InvalidUsage("Invalid payload: %s" % str(input))
+            raise InvalidUsage("Invalid payload: %s" % str(payload))
 
         # Construct the new task
         new_task = task_manager.create_new_task(repository_name=repository_name, branch_name=branch_name, vcs=vcs)

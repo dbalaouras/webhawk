@@ -35,9 +35,10 @@ class WebHookBase(BaseResource):
         """
         raise MethodNotAllowedException("GET not allowed in this Resource")
 
-    def create_task(self, input):
+    def create_task(self, payload):
         """
-        Creates a new task parsing the inpug; must be implemented by child classes
+        Creates a new task parsing the input; must be implemented by child classes
+        :param payload: The task payload
         :return: The newly created task
         """
         return None
@@ -51,7 +52,13 @@ class WebHookBase(BaseResource):
         # Parse input
         json_data = request.get_json(force=True)
 
-        # Construct the new task
+        force_cleanup = request.args.get('cleanup_builds', None)
+
+        # Override cleanup
+        if force_cleanup is not None:
+            self._context["config"]["cleanup_builds"] = force_cleanup
+
+            # Construct the new task
         new_task = self.create_task(json_data)
 
         # Construct the response

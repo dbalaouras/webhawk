@@ -12,20 +12,22 @@ class GithubWebHook(WebHookBase):
     """
     resource_name = "github"
 
-    def create_task(self, input):
+    def create_task(self, payload):
         """
         Creates a new build task using the input (usually a POST Payload)
+        :param payload: The task payload
+        :return: The newly created task
         """
 
         # Get the task manager
         task_manager = self._context.get("task_manager")
 
         try:
-            repository_name = input['repository']['name']
-            branch_name = input['ref'].split('/')[2]
+            repository_name = payload['repository']['name']
+            branch_name = payload['ref'].split('/')[2]
             vcs = "git"
         except KeyError:
-            raise InvalidUsage("Invalid payload: %s" % str(input))
+            raise InvalidUsage("Invalid payload: %s" % str(payload))
 
         # Construct the new task
         new_task = task_manager.create_new_task(repository_name=repository_name, branch_name=branch_name, vcs=vcs)

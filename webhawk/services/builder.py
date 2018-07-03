@@ -38,6 +38,7 @@ class Builder(object):
 
     def run(self, build_id, repository_name, branch_name, dependency_build=False):
         """
+        Runs the build
 
         :param build_id: A unique build Id
         :param repository_name: The name of the repository to build
