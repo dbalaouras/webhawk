@@ -36,24 +36,54 @@ class BuildTaskManager(object):
         :return: The newly created Task
         """
 
-        # TODO: Validate input
-
         # Check if we have a recipe for the given repository
-        recipe = self._context["recipe_repository"].find_by_name_and_branch(name=repository_name, branch=branch_name)
+        recipe = self._context["recipe_repository"].find_by_name_and_branch(name=repository_name,
+                                                                            branch=branch_name)
 
         if not recipe:
             raise ServiceUnavailableException(
                 "Could not find build recipe for repository '%s' and branch '%s'" % (repository_name, branch_name))
 
-        vcs_manager = self._context.get("%s_manager" % recipe["repository"]['vcs'], None)
+        # Is there a git repository we need to use?
+        if recipe.get("repository", None):
+            vcs_manager = self._context.get("%s_manager" % recipe["repository"]['vcs'], None)
 
-        if not vcs_manager:
-            raise NotImplementedException("VCS system '%s' is currently not supported." % vcs)
+            if not vcs_manager:
+                raise NotImplementedException("VCS system '%s' is currently not supported." % vcs)
 
         new_task = {
-            "repository_name": repository_name,
-            "branch_name": branch_name,
-            "vcs": vcs
+            "recipe_id": recipe['id']
+        }
+
+        # Put task queue
+        self._context["task_queue"].put(new_task)
+
+        return new_task
+
+    def create_new_task_by_id(self, recipe_id):
+        """
+        Create a new task object for the given Recipe Id
+
+        :param recipe_id: The Recipe Id
+        :return: The newly created Task
+        """
+
+        # Check if we have a recipe for the given repository
+        recipe = self._context["recipe_repository"].find_one(id=recipe_id)
+
+        if not recipe:
+            raise ServiceUnavailableException("Could not find build recipe for recipe id '%s' " % recipe_id)
+
+        # Is there a git repository we need to use?
+        if recipe.get("repository", None):
+            vcs = recipe["repository"].get('vcs', None)
+            vcs_manager = self._context.get("%s_manager" % recipe["repository"]['vcs'], None)
+
+            if not vcs_manager:
+                raise NotImplementedException("VCS system '%s' is currently not supported." % vcs)
+
+        new_task = {
+            "recipe_id": recipe_id
         }
 
         # Put task queue
@@ -66,7 +96,7 @@ class BuildTaskManager(object):
         Start build workers
 
         :param workers_num: How many workers to start
-        :return:
+        :return: None
         """
         self._logger.info("Starting %s Task Workers" % workers_num)
         reader_p = Process(target=self._listen)
@@ -76,6 +106,7 @@ class BuildTaskManager(object):
     def _listen(self):
         """
         Implements the queue listener callback.
+        :return: None
         """
         self._logger.info("Worker with PID '%s' started" % os.getpid())
         while True:
@@ -84,5 +115,4 @@ class BuildTaskManager(object):
             if item:
                 self._logger.debug("Picked item: %s" % item)
                 build_id = Builder.generate_build_id()
-                self._context.get("builder").run(build_id=build_id, repository_name=item["repository_name"],
-                                                 branch_name=item["branch_name"])
+                self._context.get("builder").run(build_id=build_id, recipe_id=item.get('recipe_id', None))

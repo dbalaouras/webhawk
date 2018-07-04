@@ -107,7 +107,8 @@ var Recipe = React.createClass({
         var build_desc = JSON.stringify({
             "repository": this.props.recipe.repository.name,
             "branch": this.props.recipe.repository.branch,
-            "scm": this.props.recipe.repository.vcs
+            "scm": this.props.recipe.repository.vcs,
+            "recipe_id": this.props.recipe.id
         });
         this.props.announceBuildCallback(this.props.recipe);
 

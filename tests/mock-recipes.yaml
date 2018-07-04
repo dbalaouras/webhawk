@@ -1,5 +1,5 @@
 #
-# BitHawk Recipies Configuration File
+# BitHawk Recipes Configuration File
 #
 myapp-develop:
   repository:
@@ -10,7 +10,7 @@ myapp-develop:
   command: "python ./bin/fabfile.py -f -s -a build"
   dependencies:
     - repository: shared
-      branch: master
+      branch: masterh
 
 shared-master:
   repository:

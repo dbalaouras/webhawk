@@ -36,41 +36,40 @@ class Builder(object):
         # Use local fabric commands when the builder is localhost
         self._change_dir = lcd if self._builder_hostname == "localhost" else cd
 
-    def run(self, build_id, repository_name, branch_name, dependency_build=False):
+    def run(self, build_id, recipe_id, dependency_build=False):
         """
         Runs the build
 
         :param build_id: A unique build Id
-        :param repository_name: The name of the repository to build
-        :param branch_name: The name of the branch to build
+        :param recipe_id: The id of the Recipe (if known)
         :param dependency_build: Is this a dependency build or not?
         """
 
         # Check if we have a recipe for the given repository
-        recipe = self._context["recipe_repository"].find_by_name_and_branch(name=repository_name, branch=branch_name)
-
+        recipe = self._context["recipe_repository"].find_one(id=recipe_id)
         # Check if we have dependencies and process them
+
         # # TODO: check for circular dependencies
         app_dependencies = recipe.get("dependencies", None)
         if app_dependencies:
             for dependency in app_dependencies:
-                self.run(repository_name=dependency['repository'], branch_name=dependency['branch'], build_id=build_id,
-                         dependency_build=True)
+                self.run(build_id=build_id, recipe_id=dependency['recipe_id'], dependency_build=True)
 
         # Create build path
         build_base_path = self._get_build_base_path(build_id=build_id)
-        build_path = "%s/%s" % (build_base_path, recipe["repository"]["name"])
+        build_path = "%s/%s" % (build_base_path, recipe_id if recipe_id else recipe["repository"]["name"])
 
         with settings(host_string=self._builder_hostname, abort_exception=FabricException), self._change_dir(
                 self._workspace_path):
             try:
                 self._prepare(build_path=build_path)
-                self._checkout(recipe=recipe, build_path=build_path)
-                self._build(recipe=recipe, build_path=build_path)
+                if recipe.get('repository', None):
+                    self._checkout(recipe=recipe, build_path=build_path)
+                self._build(recipe=recipe, build_path=build_path, recipe_id=recipe_id)
 
             except FabricException as e:
-                self._logger.error("Error occurred while building %s/%s (build id : %s): %s" % (
-                    repository_name, branch_name, build_id, e))
+                self._logger.error(
+                    "Error occurred while building recipe # %s (build id : %s): %s" % (recipe_id, build_id, e))
 
             # Cleanup build directory if instructed
             if not dependency_build and self._context["config"]["cleanup_builds"]:
@@ -107,12 +106,16 @@ class Builder(object):
         cms_manager.clone(url=recipe["repository"]["url"], branch=recipe["repository"]["branch"],
                           target_path=build_path, run_cmd=self._run_fabric)
 
-    def _build(self, recipe, build_path):
+    def _build(self, recipe, build_path, recipe_id=None):
         """
         Build the repository
         """
-        self._logger.info("Building %s:%s on %s with command: '%s'" % (
-            recipe["repository"]["name"], recipe["repository"]["branch"], build_path, recipe["command"]))
+        if recipe_id:
+            self._logger.info(
+                "Building recipe with id %s on %s with command: '%s'" % (recipe_id, build_path, recipe["command"]))
+        else:
+            self._logger.info("Building %s:%s on %s with command: '%s'" % (
+                recipe["repository"]["name"], recipe["repository"]["branch"], build_path, recipe["command"]))
 
         if recipe.get("command", None):
             with self._change_dir(build_path):

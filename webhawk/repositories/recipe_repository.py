@@ -27,6 +27,9 @@ class FileRecipeRepository(object):
         self._logger = context.get("logger")
         self._context = context
 
+        # Store recipe id inside the recipe
+        for recipe_id in self._recipes: self._recipes[recipe_id]['id'] = recipe_id
+
         self._logger.info("Loading Recipes from file '%s'" % self._recipes_file)
 
     def find_one(self, id):
@@ -46,11 +49,16 @@ class FileRecipeRepository(object):
         """
         recipe = None
         self._logger.debug("Searching for %s/%s in %s" % (name, branch, self._recipes))
-        for recipe_name in self._recipes:
-            recipe_cand = self._recipes[recipe_name]
-            if recipe_cand['repository']['name'] == name and recipe_cand['repository']['branch'] == branch:
-                recipe = recipe_cand
-                break
+        try:
+            for recipe_id in self._recipes:
+                recipe_cand = self._recipes[recipe_id]
+                if recipe_cand['repository']['name'] == name and recipe_cand['repository']['branch'] == branch:
+                    recipe = recipe_cand
+                    recipe['id'] = recipe_id
+                    break
+        except Exception:
+            # Recipe not found
+            pass
 
         return recipe
 

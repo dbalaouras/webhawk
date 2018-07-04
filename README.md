@@ -8,16 +8,16 @@ WebHawk is a simple micro-framework which helps you create webhooks for Continuo
 WebHawk comes with:
 
 1. A RESTful API which exposes the WebHook Endpoints
-2. Command line tool to trigger Build-Tasks manually
-3. Support for git Repositories
-4. Support for [Bitbucket WebHooks](https://confluence.atlassian.com/bitbucket/manage-webhooks-735643732.html)
+2. A Simple UI based on ReactJs
+3. Command line tool to trigger Build-Tasks manually
+4. Support for git Repositories
+5. Support for [Bitbucket WebHooks](https://confluence.atlassian.com/bitbucket/manage-webhooks-735643732.html)
 
 
 WebHawk **does not** come with:
 
-1. WebUI to create the build descriptions (called Recipes).
-2. Support for svn, mercurial, or other VCS.
-3. Support for git events other than PUSH.
+1. Support for svn, mercurial, or other VCS.
+2. Support for git events other than PUSH.
 
 
 WebHawk also comes with a few _secondary features_:

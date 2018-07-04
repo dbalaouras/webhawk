@@ -12,7 +12,7 @@ class WebHawkWebHook(WebHookBase):
     """
     resource_name = "webhawk"
 
-    def create_task(self, input):
+    def create_task(self, payload):
         """
         Creates a new build task using the input (usually a POST Payload)
         """
@@ -22,13 +22,14 @@ class WebHawkWebHook(WebHookBase):
 
         # Process the input
         try:
-            repository_name = input['repository']
-            branch_name = input['branch']
-            vcs = input['scm']
+            repository_name = payload['repository']
+            branch_name = payload['branch']
+            vcs = payload['scm']
+            recipe_id = payload.get('recipe_id', None)
         except KeyError:
-            raise InvalidUsage("Invalid payload: %s" % str(input))
+            raise InvalidUsage("Invalid payload: %s" % str(payload))
 
         # Construct the new task
-        new_task = task_manager.create_new_task(repository_name=repository_name, branch_name=branch_name, vcs=vcs)
+        new_task = task_manager.create_new_task_by_id(recipe_id=recipe_id)
 
         return new_task

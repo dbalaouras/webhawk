@@ -1,5 +1,5 @@
 #
-# BitHawk Recipies YAML Configuration File
+# BitHawk recipes YAML Configuration File
 #
 # Contains Recipes (build descriptions) for projects hosted on remote VCS services (github, bitbucket)
 #
@@ -12,3 +12,6 @@ myapp-dev:
     url: "git@bitbucket.org:stek.io/website.git"
     vcs: git
   command: "python ./bin/fabfile.py -f -s -a build"
+
+simple-build:
+  command: "pwd && ls -la"
