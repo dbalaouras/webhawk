@@ -83,7 +83,7 @@ var RecipeList = React.createClass({
     render: function () {
         var api_url = this.props.api_url;
         var announceBuildCallback = this.props.announceBuildCallback;
-        var buildMessageRemoved=this.props.buildMessageRemoved;
+        var buildMessageRemoved = this.props.buildMessageRemoved;
         var recipeNodes = this.props.recipes.map(function (recipe) {
             return (
                 <Recipe key={recipe.id} recipe={recipe} api_url={api_url}
@@ -125,7 +125,7 @@ var Recipe = React.createClass({
             }.bind(this)
         });
 
-        setTimeout(this.props.buildMessageRemoved, 5000);
+        setTimeout(this.props.buildMessageRemoved, 10000);
     },
     rawMarkup: function () {
         var rawMarkup = this.props.children.toString();
@@ -176,8 +176,8 @@ var BuildMessage = React.createClass({
             <div className="alert alert-info alert-dismissable">
                 <button type="button" className="close" onClick={this.props.buildMessageRemoved}
                         aria-hidden="true">&times;</button>
-                <i className="fa fa-info-circle"></i> Build started for repository:
-                <strong>{this.props.buildAnnouncement.repository.name}/{this.props.buildAnnouncement.repository.branch}</strong>
+                <i className="fa fa-info-circle"></i> Build started for
+                recipe: <strong>{this.props.buildAnnouncement.id}</strong>
             </div>
         );
     }
