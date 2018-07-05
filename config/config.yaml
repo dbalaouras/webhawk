@@ -23,6 +23,12 @@ logging:
         precise:
            format: "%(asctime)s - %(name)-15s - %(process)-5d - %(levelname)-6s - %(message)s"
 
+    filters:
+        static_fields:
+            '()': 'webhawk.services.log_filters.StaticFieldFilter'
+            fields:
+                'project': 'webhawk'
+
     # Configure the logging handlers
     handlers:
         console:
@@ -40,6 +46,12 @@ logging:
             filename: webhawk.log
             maxBytes: 1048576
             backupCount: 3
+        graypy:
+            class: graypy.GELFHandler
+            host: 127.0.0.1
+            port: 12201
+            filters:
+              - static_fields
 
     # Root logger
     root:
