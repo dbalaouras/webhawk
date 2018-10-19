@@ -1,6 +1,7 @@
 import os
 
 from lib import common
+from operator import itemgetter
 
 __author__ = "Dimi Balaouras"
 __copyright__ = "Copyright 2016, Dimi Balaouras - Stek.io"
@@ -67,7 +68,7 @@ class FileRecipeRepository(object):
         Get all recipes
         :return: The Recipe objects in a list
         """
-        return [self._format_recipe(name, self._recipes[name]) for name in self._recipes]
+        return sorted([self._format_recipe(name, self._recipes[name]) for name in self._recipes], key=itemgetter("id"))
 
     def count(self, query=None):
         """
