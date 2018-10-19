@@ -1,45 +1,45 @@
-var RecipesBox = React.createClass({
-    loadRecipesFromAPI: function () {
+let RecipesBox = React.createClass({
+    loadRecipesFromAPI: () => {
         $.ajax({
             url: this.props.api_url + "/recipe",
             dataType: 'json',
             cache: false,
-            success: function (data) {
+            success: ((data) => {
                 this.setState({
                     buildAnnouncements: this.state.buildAnnouncements,
                     recipes: data._embedded.recipe
                 });
-            }.bind(this),
-            error: function (xhr, status, err) {
+            }).bind(this),
+            error: ((xhr, status, err) => {
                 console.error(this.props.api_url, status, err.toString());
-            }.bind(this)
+            }).bind(this)
         });
     },
-    getInitialState: function () {
+    getInitialState: () => {
         return {
             buildAnnouncements: [],
             recipes: []
         };
     },
-    componentDidMount: function () {
+    componentDidMount: () => {
         this.loadRecipesFromAPI();
         setInterval(this.loadRecipesFromAPI, this.props.pollInterval);
     },
-    announceBuild: function (recipe) {
+    announceBuild: (recipe) => {
         console.info(recipe);
         this.setState({
             buildAnnouncements: [recipe],
             recipes: this.state.recipes
         });
     },
-    buildMessageRemoved: function () {
+    buildMessageRemoved: () => {
         console.debug('buildMessageRemoved');
         this.setState({
             buildAnnouncements: [],
             recipes: this.state.recipes
         });
     },
-    render: function () {
+    render: () => {
         return (
             <div>
                 <BuildMessageList buildMessageRemoved={this.buildMessageRemoved}
@@ -51,10 +51,10 @@ var RecipesBox = React.createClass({
     }
 });
 
-var RecipesTable = React.createClass({
-    render: function () {
+let RecipesTable = React.createClass({
+    render: () => {
 
-        var buildMessageRemoved = this.props.buildMessageRemoved;
+        const buildMessageRemoved = this.props.buildMessageRemoved;
 
         return (
             <div className="table-responsive">
@@ -79,12 +79,12 @@ var RecipesTable = React.createClass({
     }
 });
 
-var RecipeList = React.createClass({
-    render: function () {
-        var api_url = this.props.api_url;
-        var announceBuildCallback = this.props.announceBuildCallback;
-        var buildMessageRemoved = this.props.buildMessageRemoved;
-        var recipeNodes = this.props.recipes.map(function (recipe) {
+let RecipeList = React.createClass({
+    render: () => {
+        const api_url = this.props.api_url;
+        const announceBuildCallback = this.props.announceBuildCallback;
+        const buildMessageRemoved = this.props.buildMessageRemoved;
+        let recipeNodes = this.props.recipes.map((recipe) => {
             return (
                 <Recipe key={recipe.id} recipe={recipe} api_url={api_url}
                         buildMessageRemoved={buildMessageRemoved}
@@ -100,11 +100,11 @@ var RecipeList = React.createClass({
 });
 
 
-var Recipe = React.createClass({
+let Recipe = React.createClass({
 
-    handleRecipeTrigger: function (e) {
+    handleRecipeTrigger: (e) => {
         e.preventDefault();
-        var build_desc = JSON.stringify({
+        let build_desc = JSON.stringify({
             "repository": this.props.recipe.repository.name,
             "branch": this.props.recipe.repository.branch,
             "scm": this.props.recipe.repository.vcs,
@@ -117,22 +117,22 @@ var Recipe = React.createClass({
             dataType: 'json',
             type: 'POST',
             data: build_desc,
-            success: function (data) {
+            success: ((data) => {
                 // console.info(data);
-            }.bind(this),
-            error: function (xhr, status, err) {
+            }).bind(this),
+            error: ((xhr, status, err) => {
                 console.error(this.props.api_url, status, err.toString());
-            }.bind(this)
+            }).bind(this)
         });
 
         setTimeout(this.props.buildMessageRemoved, 10000);
     },
-    rawMarkup: function () {
-        var rawMarkup = this.props.children.toString();
+    rawMarkup: () => {
+        let rawMarkup = this.props.children.toString();
         return {__html: rawMarkup};
     },
 
-    render: function () {
+    render: () => {
         return (
             <tr>
                 <td>{this.props.recipe.id}</td>
@@ -150,11 +150,11 @@ var Recipe = React.createClass({
 });
 
 
-var BuildMessageList = React.createClass({
+let BuildMessageList = React.createClass({
 
-    render: function () {
-        var buildMessageRemoved = this.props.buildMessageRemoved;
-        var messages = this.props.buildAnnouncements.map(function (buildAnnouncement) {
+    render: () => {
+        const buildMessageRemoved = this.props.buildMessageRemoved;
+        let messages = this.props.buildAnnouncements.map((buildAnnouncement) => {
             return (
                 <BuildMessage key={buildAnnouncement.id} buildAnnouncement={buildAnnouncement}
                               buildMessageRemoved={buildMessageRemoved}> </BuildMessage>
@@ -170,8 +170,8 @@ var BuildMessageList = React.createClass({
     }
 });
 
-var BuildMessage = React.createClass({
-    render: function () {
+let BuildMessage = React.createClass({
+    render: () => {
         return (
             <div className="alert alert-info alert-dismissable">
                 <button type="button" className="close" onClick={this.props.buildMessageRemoved}
@@ -192,30 +192,30 @@ ReactDOM.render(
 //  ====================================================
 
 
-var CommentBox = React.createClass({
-    loadCommentsFromServer: function () {
+let CommentBox = React.createClass({
+    loadCommentsFromServer: () => {
         // tutorial8.js
-        var data = [
+        const data = [
             {id: 1, author: "Pete Hunt", text: "This is one comment"},
             {id: 2, author: "Jordan Walke", text: "This is *another* comment"}
         ];
         this.setState({data: data});
     },
-    getInitialState: function () {
+    getInitialState: () => {
         // tutorial8.js
-        var data = [
+        const data = [
             {id: 1, author: "Pete Hunt", text: "This is one comment"},
             {id: 2, author: "Jordan Walke", text: "This is *another* comment"}
         ];
         return {data: data};
     },
-    handleCommentSubmit: function (comment) {
-        var comments = this.state.data;
+    handleCommentSubmit: (comment) => {
+        let comments = this.state.data;
         // Optimistically set an id on the new comment. It will be replaced by an
         // id generated by the server. In a production application you would likely
         // not use Date.now() for this and would have a more robust system in place.
         comment.id = Date.now();
-        var newComments = comments.concat([comment]);
+        let newComments = comments.concat([comment]);
         this.setState({data: newComments});
 
         $.ajax({
@@ -223,19 +223,19 @@ var CommentBox = React.createClass({
             dataType: 'json',
             type: 'POST',
             data: comment,
-            success: function (data) {
+            success: ((data) => {
                 this.setState({data: data});
-            }.bind(this),
-            error: function (xhr, status, err) {
+            }).bind(this),
+            error: ((xhr, status, err) => {
                 console.error(this.props.url, status, err.toString());
-            }.bind(this)
+            }).bind(this)
         });
     },
-    componentDidMount: function () {
+    componentDidMount: (() => {
         this.loadCommentsFromServer();
         setInterval(this.loadCommentsFromServer, this.props.pollInterval);
-    },
-    render: function () {
+    }),
+    render: () => {
         return (
             <div className="commentBox">
                 <h1>Comments</h1>
@@ -247,9 +247,9 @@ var CommentBox = React.createClass({
 });
 
 // tutorial10.js
-var CommentList = React.createClass({
-    render: function () {
-        var commentNodes = this.props.data.map(function (comment) {
+let CommentList = React.createClass({
+    render: () => {
+        let commentNodes = this.props.data.map((comment) => {
             return (
                 <Comment author={comment.author} key={comment.id}>
                     {comment.text}
@@ -265,28 +265,28 @@ var CommentList = React.createClass({
 });
 
 
-var CommentForm = React.createClass({
-    getInitialState: function () {
+let CommentForm = React.createClass({
+    getInitialState: () => {
         return {author: '', text: ''};
     },
-    handleAuthorChange: function (e) {
+    handleAuthorChange: (e) => {
         this.setState({author: e.target.value});
     },
-    handleTextChange: function (e) {
+    handleTextChange: (e) => {
         this.setState({text: e.target.value});
     },
-    handleSubmit: function (e) {
+    handleSubmit: (e) => {
         e.preventDefault();
 
-        var author = this.state.author.trim();
-        var text = this.state.text.trim();
+        const author = this.state.author.trim();
+        const text = this.state.text.trim();
         if (!text || !author) {
             return;
         }
         this.props.onCommentSubmit({author: author, text: text});
         this.setState({author: '', text: ''});
     },
-    render: function () {
+    render: () => {
         return (
             <div className="commentForm">
                 <form className="commentForm" onSubmit={this.handleSubmit}>
@@ -317,21 +317,21 @@ var CommentForm = React.createClass({
 });
 
 // tutorial8.js
-var data = [
+const data = [
     {id: 1, author: "Dimi Bal", text: "This is one comment"},
     {id: 2, author: "Dzim", text: "This is *another* comment"}
 ];
 
 // tutorial4.js
 // tutorial6.js
-var Comment = React.createClass({
+let Comment = React.createClass({
 
-    rawMarkup: function () {
-        var rawMarkup = this.props.children.toString();
+    rawMarkup: () => {
+        let rawMarkup = this.props.children.toString();
         return {__html: rawMarkup};
     },
 
-    render: function () {
+    render: () => {
         return (
             <div className="comment">
                 <h2 className="commentAuthor">
