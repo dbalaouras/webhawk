@@ -71,7 +71,7 @@ def parse_options():
     parser.add_option("-H", "--host", action="store", dest="host", default="0.0.0.0",
                       help="Web server host")
 
-    parser.add_option("-P", "--port", action="store", dest="port", default=5000,
+    parser.add_option("-P", "--port", type="int", action="store", dest="port", default=5000,
                       help="Web server port")
 
     # Parse the options
