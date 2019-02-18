@@ -7,7 +7,7 @@ base_path: "/api"
 
 # BUILDING
 recipes_file_path: "config/recipes.yaml"
-workspace_path: "/Users/dimi/Workspaces/bithawk-build"
+workspace_path: ${WEBHAWK_WORKSPACE_PATH:"/tmp/webhawk/"}
 builder_hostname: localhost
 task_queue_size: 10
 cleanup_builds: true
@@ -25,7 +25,7 @@ logging:
 
     filters:
         static_fields:
-            '()': 'webhawk.services.log_filters.StaticFieldFilter'
+            '()': 'services.log_filters.StaticFieldFilter'
             fields:
                 'project': 'webhawk'
 
