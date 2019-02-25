@@ -41,6 +41,9 @@ class BuildTaskManager(object):
                                                                             branch=branch_name)
 
         if not recipe:
+            recipe = self._context["recipe_repository"].find_by_name_and_star_wildcard(name=repository_name)
+
+        if not recipe:
             raise ServiceUnavailableException(
                 "Could not find build recipe for repository '%s' and branch '%s'" % (repository_name, branch_name))
 

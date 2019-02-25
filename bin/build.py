@@ -53,6 +53,9 @@ def build(cli_options, repository, branch):
     recipe = context["recipe_repository"].find_by_name_and_branch(name=repository, branch=branch)
 
     if not recipe:
+        recipe = context["recipe_repository"].find_by_name_and_star_wildcard(name=repository)
+
+    if not recipe:
         logger.error("Could not find Recipe for %s:%s" % (repository, branch))
         exit(1)
 
