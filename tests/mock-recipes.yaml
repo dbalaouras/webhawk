@@ -20,3 +20,12 @@ shared-master:
     scm: git
   command: null
   dependencies: null
+
+myall-app:
+  repository:
+    name: myall
+    branch: "*"
+    url: "git@bitbucket.org:frontierfm/discovery-engine.git"
+    scm: git
+  command: null
+  dependencies: null
