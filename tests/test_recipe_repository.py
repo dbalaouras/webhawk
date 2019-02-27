@@ -37,6 +37,19 @@ def test_find_by_name_and_branch():
     assert_is_none(recipe)
 
 
+def test_find_by_name_and_star_wildcard():
+    """
+    Test if the recipe file repository can find a recipe by name and star (asterisk) wildcard
+    """
+    recipe = recipe_repository.find_by_name_and_star_wildcard("myall")
+    assert_is_not_none(recipe)
+    assert_is_instance(obj=recipe, cls=dict)
+    assert "*" in recipe["repository"]["branch"]
+
+    recipe = recipe_repository.find_by_name_and_star_wildcard("myall-fake")
+    assert_is_none(recipe)
+
+
 def test_find_by_id():
     """
     Test if the recipe file repository can find a recipe by id
@@ -56,4 +69,4 @@ def test_find_all():
     recipes = recipe_repository.find_all()
     assert_is_not_none(recipes)
     assert_is_instance(obj=recipes, cls=list)
-    assert_equal(len(recipes), 2)
+    assert_equal(len(recipes), 3)

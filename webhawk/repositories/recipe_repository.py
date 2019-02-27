@@ -43,7 +43,7 @@ class FileRecipeRepository(object):
 
     def find_by_name_and_branch(self, name, branch):
         """
-        Get recipe by name
+        Get recipe by name and branch
         :param name: Repository Name
         :param branch: Branch of the repository
         :return: The Recipe object if found; None otherwise
@@ -62,6 +62,15 @@ class FileRecipeRepository(object):
             pass
 
         return recipe
+
+    def find_by_name_and_star_wildcard(self, name):
+        """
+        Get recipe by name and star (asterisk) wildcard
+        :param name: Repository Name
+        :return: The Recipe object if found; None otherwise
+        """
+        # Basically, do same thing as find_by_name_and_branch does..but look for an asterisk instead of specific branch
+        return self.find_by_name_and_branch(name=name, branch="*")
 
     def find_all(self):
         """
