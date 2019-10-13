@@ -42,7 +42,10 @@ source "$VENV_NAME/bin/activate"
 # Upgrade pip
 pip install --upgrade pip
 
-# Install Prerequisites
-pip install -q -r requirements.txt
+# Install pipenv
+pip install pipenv
+
+# Install Pipfile dependencies (ignore existing venv warning)
+PIPENV_VERBOSITY=-1 pipenv install
 
 deactivate
