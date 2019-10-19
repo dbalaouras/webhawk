@@ -1,7 +1,7 @@
 import os
+from operator import itemgetter
 
 from lib import common
-from operator import itemgetter
 
 __author__ = "Dimi Balaouras"
 __copyright__ = "Copyright 2016, Dimi Balaouras - Stek.io"
@@ -19,19 +19,22 @@ class FileRecipeRepository(object):
         """
         Class initialisation
         """
+        self._context = context
+        self._logger = context.get("logger")
+        self._recipes_file = context["config"]["recipes_file_path"]
+
+        self._logger.info("Attempting to load Recipes from file '%s'" % self._recipes_file)
 
         # Load Recipes
-        self._recipes_file = context["config"]["recipes_file_path"]
         if not os.path.isfile(self._recipes_file):
             raise EnvironmentError("Recipes file '%s' does not exist in '%s'" % (self._recipes_file, os.getcwd()))
         self._recipes = common.load_config(self._recipes_file)
-        self._logger = context.get("logger")
-        self._context = context
 
         # Store recipe id inside the recipe
-        for recipe_id in self._recipes: self._recipes[recipe_id]['id'] = recipe_id
+        for recipe_id in self._recipes:
+            self._recipes[recipe_id]['id'] = recipe_id
 
-        self._logger.info("Loading Recipes from file '%s'" % self._recipes_file)
+        self._logger.info("Loaded %s recipes" % len(self._recipes))
 
     def find_one(self, id):
         """
