@@ -22,9 +22,6 @@ echo "$LOGO"
 
 echo "Bootstraping WebHawk Environment..."
 
-# Install pip
-pip install virtualenv
-
 # Go into the app root directory
 cd "$SCRIPTPATH/../"
 
